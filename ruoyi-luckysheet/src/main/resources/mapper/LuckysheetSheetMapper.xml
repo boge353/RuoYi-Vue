@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.luckysheet.mapper.LuckysheetSheetMapper">
+    
+    <resultMap type="com.ruoyi.luckysheet.domain.LuckysheetSheet" id="SheetResult">
+        <result property="id"    column="id"    />
+        <result property="workbookId"    column="workbook_id"    />
+        <result property="sheetIndex"    column="sheet_index"    />
+        <result property="sheetName"    column="sheet_name"    />
+        <result property="sheetOrder"    column="sheet_order"    />
+        <result property="isHidden"    column="is_hidden"    />
+        <result property="isActive"    column="is_active"    />
+        <result property="config"    column="config"    />
+        <result property="cellData"    column="cell_data"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSheetVo">
+        select id, workbook_id, sheet_index, sheet_name, sheet_order, is_hidden, is_active,
+               config, cell_data, create_time, update_time, del_flag, remark
+        from luckysheet_sheet
+    </sql>
+
+    <select id="selectSheetList" parameterType="com.ruoyi.luckysheet.domain.LuckysheetSheet" resultMap="SheetResult">
+        <include refid="selectSheetVo"/>
+        <where>  
+            del_flag = '0'
+            <if test="workbookId != null">
+                AND workbook_id = #{workbookId}
+            </if>
+            <if test="sheetName != null and sheetName != ''">
+                AND sheet_name like concat('%', #{sheetName}, '%')
+            </if>
+            <if test="sheetIndex != null and sheetIndex != ''">
+                AND sheet_index = #{sheetIndex}
+            </if>
+            <if test="isHidden != null and isHidden != ''">
+                AND is_hidden = #{isHidden}
+            </if>
+        </where>
+        order by workbook_id, sheet_order
+    </select>
+
+    <select id="selectSheetListByWorkbookId" parameterType="Long" resultMap="SheetResult">
+        <include refid="selectSheetVo"/>
+        where workbook_id = #{workbookId} and del_flag = '0'
+        order by sheet_order
+    </select>
+    
+    <select id="selectSheetById" parameterType="Long" resultMap="SheetResult">
+        <include refid="selectSheetVo"/>
+        where id = #{id} and del_flag = '0'
+    </select>
+
+    <select id="selectSheetByIndex" resultMap="SheetResult">
+        <include refid="selectSheetVo"/>
+        where workbook_id = #{workbookId} and sheet_index = #{sheetIndex} and del_flag = '0'
+    </select>
+        
+    <insert id="insertSheet" parameterType="com.ruoyi.luckysheet.domain.LuckysheetSheet" useGeneratedKeys="true" keyProperty="id">
+        insert into luckysheet_sheet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workbookId != null">workbook_id,</if>
+            <if test="sheetIndex != null and sheetIndex != ''">sheet_index,</if>
+            <if test="sheetName != null and sheetName != ''">sheet_name,</if>
+            <if test="sheetOrder != null">sheet_order,</if>
+            <if test="isHidden != null">is_hidden,</if>
+            <if test="isActive != null">is_active,</if>
+            <if test="config != null">config,</if>
+            <if test="cellData != null">cell_data,</if>
+            <if test="remark != null">remark,</if>
+            del_flag,
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workbookId != null">#{workbookId},</if>
+            <if test="sheetIndex != null and sheetIndex != ''">#{sheetIndex},</if>
+            <if test="sheetName != null and sheetName != ''">#{sheetName},</if>
+            <if test="sheetOrder != null">#{sheetOrder},</if>
+            <if test="isHidden != null">#{isHidden},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="config != null">#{config},</if>
+            <if test="cellData != null">#{cellData},</if>
+            <if test="remark != null">#{remark},</if>
+            '0',
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateSheet" parameterType="com.ruoyi.luckysheet.domain.LuckysheetSheet">
+        update luckysheet_sheet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sheetName != null and sheetName != ''">sheet_name = #{sheetName},</if>
+            <if test="sheetOrder != null">sheet_order = #{sheetOrder},</if>
+            <if test="isHidden != null">is_hidden = #{isHidden},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="config != null">config = #{config},</if>
+            <if test="cellData != null">cell_data = #{cellData},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSheetById" parameterType="Long">
+        update luckysheet_sheet set del_flag = '2' where id = #{id}
+    </delete>
+
+    <delete id="deleteSheetByIds" parameterType="Long">
+        update luckysheet_sheet set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

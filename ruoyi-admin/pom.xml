@@ -67,6 +67,12 @@
             <artifactId>ruoyi-flowable</artifactId>
         </dependency>
 
+        <!-- Luckysheet在线表格模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-luckysheet</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

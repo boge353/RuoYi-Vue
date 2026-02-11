@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.luckysheet.mapper.LuckysheetWorkbookMapper">
+    
+    <resultMap type="com.ruoyi.luckysheet.domain.LuckysheetWorkbook" id="WorkbookResult">
+        <result property="id"    column="id"    />
+        <result property="workbookName"    column="workbook_name"    />
+        <result property="description"    column="description"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateByName"    column="update_by_name"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectWorkbookVo">
+        select id, workbook_name, description, create_by, create_by_name, create_time, 
+               update_by, update_by_name, update_time, status, del_flag, remark
+        from luckysheet_workbook
+    </sql>
+
+    <select id="selectWorkbookList" parameterType="com.ruoyi.luckysheet.domain.LuckysheetWorkbook" resultMap="WorkbookResult">
+        <include refid="selectWorkbookVo"/>
+        <where>  
+            del_flag = '0'
+            <if test="workbookName != null and workbookName != ''">
+                AND workbook_name like concat('%', #{workbookName}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="createBy != null">
+                AND create_by = #{createBy}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectWorkbookById" parameterType="Long" resultMap="WorkbookResult">
+        <include refid="selectWorkbookVo"/>
+        where id = #{id} and del_flag = '0'
+    </select>
+        
+    <insert id="insertWorkbook" parameterType="com.ruoyi.luckysheet.domain.LuckysheetWorkbook" useGeneratedKeys="true" keyProperty="id">
+        insert into luckysheet_workbook
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workbookName != null and workbookName != ''">workbook_name,</if>
+            <if test="description != null">description,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null and createByName != ''">create_by_name,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            del_flag,
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workbookName != null and workbookName != ''">#{workbookName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null and createByName != ''">#{createByName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            '0',
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateWorkbook" parameterType="com.ruoyi.luckysheet.domain.LuckysheetWorkbook">
+        update luckysheet_workbook
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workbookName != null and workbookName != ''">workbook_name = #{workbookName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateByName != null and updateByName != ''">update_by_name = #{updateByName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWorkbookById" parameterType="Long">
+        update luckysheet_workbook set del_flag = '2' where id = #{id}
+    </delete>
+
+    <delete id="deleteWorkbookByIds" parameterType="Long">
+        update luckysheet_workbook set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

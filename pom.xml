@@ -241,6 +241,13 @@
                 <version>${flowable.version}</version>
             </dependency>
 
+            <!-- Luckysheet在线表格模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-luckysheet</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -252,6 +259,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-flowable</module>
+        <module>ruoyi-luckysheet</module>
     </modules>
     <packaging>pom</packaging>
 
