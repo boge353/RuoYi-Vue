@@ -22,15 +22,9 @@ public class LuckysheetWorkbook extends BaseEntity
     /** 工作簿描述 */
     private String description;
 
-    /** 创建者ID */
-    private Long createBy;
-
     /** 创建者名称 */
     @Excel(name = "创建者")
     private String createByName;
-
-    /** 更新者ID */
-    private Long updateBy;
 
     /** 更新者名称 */
     private String updateByName;
@@ -71,16 +65,6 @@ public class LuckysheetWorkbook extends BaseEntity
         this.description = description;
     }
 
-    public Long getCreateBy()
-    {
-        return createBy;
-    }
-
-    public void setCreateBy(Long createBy)
-    {
-        this.createBy = createBy;
-    }
-
     public String getCreateByName()
     {
         return createByName;
@@ -89,16 +73,6 @@ public class LuckysheetWorkbook extends BaseEntity
     public void setCreateByName(String createByName)
     {
         this.createByName = createByName;
-    }
-
-    public Long getUpdateBy()
-    {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy)
-    {
-        this.updateBy = updateBy;
     }
 
     public String getUpdateByName()
