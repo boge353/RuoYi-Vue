@@ -137,6 +137,8 @@ xss:
 
 # Flowable工作流配置
 flowable:
+  # 是否启用Flowable（如果遇到数据库初始化问题，可以临时设置为false）
+  # enabled: false
   # 关闭定时任务JOB
   async-executor-activate: false
   # 关闭自动部署

@@ -2,6 +2,7 @@ package com.ruoyi.flowable.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.ruoyi.flowable.service.IFlowableProcessService;
  */
 @RestController
 @RequestMapping("/flowable/process")
+@ConditionalOnProperty(prefix = "flowable", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class FlowableProcessController extends BaseController
 {
     @Autowired

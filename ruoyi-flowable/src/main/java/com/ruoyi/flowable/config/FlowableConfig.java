@@ -2,19 +2,28 @@ package com.ruoyi.flowable.config;
 
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Flowable配置 - 解决MySQL 8.2.0兼容性问题
  * 
+ * 可以通过设置 flowable.enabled=false 来禁用Flowable功能
+ * 
  * @author ruoyi
  */
 @Configuration
+@ConditionalOnProperty(prefix = "flowable", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class FlowableConfig implements EngineConfigurationConfigurer<SpringProcessEngineConfiguration>
 {
+    private static final Logger log = LoggerFactory.getLogger(FlowableConfig.class);
     @Override
     public void configure(SpringProcessEngineConfiguration engineConfiguration)
     {
+        log.info("正在初始化Flowable工作流引擎...");
+        
         // 设置字体，避免中文乱码
         engineConfiguration.setActivityFontName("宋体");
         engineConfiguration.setLabelFontName("宋体");
@@ -31,5 +40,7 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
         // - "create-drop": 启动时创建表，关闭时删除表（仅用于开发测试）
         // - "drop-create": 先删除后创建（清空所有数据）
         engineConfiguration.setDatabaseSchemaUpdate(SpringProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
+        
+        log.info("Flowable工作流引擎配置完成");
     }
 }
