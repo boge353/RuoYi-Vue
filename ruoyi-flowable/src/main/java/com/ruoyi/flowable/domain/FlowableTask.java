@@ -30,10 +30,10 @@ public class FlowableTask extends BaseEntity
     private String assignee;
 
     /** 任务创建时间 */
-    private String createTime;
+    private String taskCreateTime;
 
     /** 任务完成时间 */
-    private String endTime;
+    private String taskEndTime;
 
     /** 任务持续时间 */
     private Long duration;
@@ -101,24 +101,24 @@ public class FlowableTask extends BaseEntity
         this.assignee = assignee;
     }
 
-    public String getCreateTime()
+    public String getTaskCreateTime()
     {
-        return createTime;
+        return taskCreateTime;
     }
 
-    public void setCreateTime(String createTime)
+    public void setTaskCreateTime(String taskCreateTime)
     {
-        this.createTime = createTime;
+        this.taskCreateTime = taskCreateTime;
     }
 
-    public String getEndTime()
+    public String getTaskEndTime()
     {
-        return endTime;
+        return taskEndTime;
     }
 
-    public void setEndTime(String endTime)
+    public void setTaskEndTime(String taskEndTime)
     {
-        this.endTime = endTime;
+        this.taskEndTime = taskEndTime;
     }
 
     public Long getDuration()

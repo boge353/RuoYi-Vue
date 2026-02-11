@@ -8,7 +8,6 @@ import java.util.Map;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.history.HistoricTaskInstance;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
@@ -63,7 +62,7 @@ public class FlowableTaskServiceImpl implements IFlowableTaskService
             flowableTask.setAssignee(task.getAssignee());
             if (task.getCreateTime() != null)
             {
-                flowableTask.setCreateTime(sdf.format(task.getCreateTime()));
+                flowableTask.setTaskCreateTime(sdf.format(task.getCreateTime()));
             }
             flowableTask.setTaskStatus("待办");
             taskList.add(flowableTask);
@@ -99,11 +98,11 @@ public class FlowableTaskServiceImpl implements IFlowableTaskService
             flowableTask.setAssignee(task.getAssignee());
             if (task.getCreateTime() != null)
             {
-                flowableTask.setCreateTime(sdf.format(task.getCreateTime()));
+                flowableTask.setTaskCreateTime(sdf.format(task.getCreateTime()));
             }
             if (task.getEndTime() != null)
             {
-                flowableTask.setEndTime(sdf.format(task.getEndTime()));
+                flowableTask.setTaskEndTime(sdf.format(task.getEndTime()));
             }
             flowableTask.setDuration(task.getDurationInMillis());
             flowableTask.setTaskStatus("已完成");

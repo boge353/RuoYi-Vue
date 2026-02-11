@@ -39,7 +39,7 @@ public class FlowableTaskController extends BaseController
     @GetMapping("/todo")
     public TableDataInfo todoList()
     {
-        String userId = getUserId();
+        String userId = getCurrentUserId();
         startPage();
         List<FlowableTask> list = flowableTaskService.selectTodoTaskList(userId);
         return getDataTable(list);
@@ -51,7 +51,7 @@ public class FlowableTaskController extends BaseController
     @GetMapping("/finished")
     public TableDataInfo finishedList()
     {
-        String userId = getUserId();
+        String userId = getCurrentUserId();
         startPage();
         List<FlowableTask> list = flowableTaskService.selectFinishedTaskList(userId);
         return getDataTable(list);
@@ -125,7 +125,7 @@ public class FlowableTaskController extends BaseController
     @PostMapping("/claim/{taskId}")
     public AjaxResult claim(@PathVariable String taskId)
     {
-        String userId = getUserId();
+        String userId = getCurrentUserId();
         flowableTaskService.claimTask(taskId, userId);
         return success();
     }
@@ -143,7 +143,7 @@ public class FlowableTaskController extends BaseController
     /**
      * 获取当前用户ID
      */
-    private String getUserId()
+    public String getCurrentUserId()
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() != null)
