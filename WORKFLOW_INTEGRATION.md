@@ -20,10 +20,11 @@
 
 ### 3. MySQL 驱动升级
 
-由于 Spring Boot 2.7.8+ 不再管理旧的 MySQL 驱动依赖，进行了以下更改：
+由于 Spring Boot 2.7.8+ 不再管理旧的 MySQL 驱动依赖，并且为了修复安全漏洞，进行了以下更改：
 
 - **原坐标**: `mysql:mysql-connector-java` (未指定版本)
-- **新坐标**: `com.mysql:mysql-connector-j:8.0.33`
+- **新坐标**: `com.mysql:mysql-connector-j:8.2.0`
+- **安全修复**: 修复了 MySQL Connectors takeover 漏洞（CVE）
 - **变更文件**: 
   - `/pom.xml` (添加依赖管理)
   - `/ruoyi-admin/pom.xml` (更新依赖坐标)
@@ -89,7 +90,14 @@ flowable:
 
 ```xml
 <flowable.version>6.8.1</flowable.version>
-<mysql.version>8.0.33</mysql.version>
+<mysql.version>8.2.0</mysql.version>
+
+<!-- MySQL驱动 -->
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>${mysql.version}</version>
+</dependency>
 
 <!-- Flowable工作流引擎 -->
 <dependency>
@@ -105,6 +113,13 @@ flowable:
     <version>${ruoyi.version}</version>
 </dependency>
 ```
+
+## 安全更新
+
+**MySQL 驱动安全修复**
+- 升级到 MySQL Connector/J 8.2.0，修复了以下安全漏洞：
+  - MySQL Connectors takeover vulnerability (影响版本 < 8.2.0)
+  - 建议所有使用旧版本的项目立即升级
 
 ## 构建验证
 
@@ -194,9 +209,10 @@ curl -X PUT http://localhost:8080/flowable/process/changeState/{processId}/0
 ## 注意事项
 
 1. **JDK 版本要求**: 必须使用 JDK 21
-2. **数据库兼容性**: 使用新的 MySQL 驱动 `com.mysql:mysql-connector-j`
+2. **数据库兼容性**: 使用新的 MySQL 驱动 `com.mysql:mysql-connector-j:8.2.0`（已修复安全漏洞）
 3. **Spring Boot 版本**: 2.7.18 是支持 JDK 21 和 Flowable 6.8.1 的稳定版本
 4. **Flowable 版本限制**: Flowable 6.8.1 不支持 Spring Boot 3.x，如需使用 Spring Boot 3.x，需升级到 Flowable 7.x
+5. **安全性**: MySQL 驱动已升级到 8.2.0，修复了 takeover 漏洞
 
 ## 后续开发建议
 
@@ -238,11 +254,12 @@ curl -X PUT http://localhost:8080/flowable/process/changeState/{processId}/0
 | JDK | 21 | LTS 版本 |
 | Spring Boot | 2.7.18 | 支持 JDK 21 |
 | Flowable | 6.8.1 | 兼容 Spring Boot 2.7.x |
-| MySQL Driver | 8.0.33 | 新坐标 com.mysql:mysql-connector-j |
+| MySQL Driver | 8.2.0 | 新坐标 com.mysql:mysql-connector-j（已修复安全漏洞） |
 | MySQL | 5.7+ / 8.x | 数据库版本 |
 
 ---
 
 **变更完成时间**: 2026-02-11  
 **构建状态**: ✅ 成功  
+**安全扫描**: ✅ 无漏洞（MySQL 驱动已升级到 8.2.0）  
 **测试状态**: ⏳ 待数据库环境验证
