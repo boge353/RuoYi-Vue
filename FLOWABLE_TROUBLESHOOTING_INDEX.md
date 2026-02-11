@@ -1,5 +1,18 @@
 # Flowable 故障排除完整指南
 
+## 🚨 遇到啟動錯誤？
+
+### ⚡ 30秒快速解決
+👉 **立即查看**: [README_START_ERROR_FIX.md](README_START_ERROR_FIX.md) ⭐ **推薦！**
+
+只需取消一行註釋，應用立即啟動：
+```yaml
+flowable:
+  enabled: false  # 臨時禁用Flowable
+```
+
+---
+
 ## 快速导航
 
 根据您遇到的错误信息，选择对应的解决方案：
@@ -13,9 +26,14 @@ because "dbVersionProperty" is null
 ```
 
 **原因**: Flowable 表不存在  
-**解决方案**: 📖 [FLOWABLE_NPE_FIX.md](FLOWABLE_NPE_FIX.md)  
+**最快解決**: 📖 [README_START_ERROR_FIX.md](README_START_ERROR_FIX.md) ⭐ **30秒修復**  
+**完整方案**: 📖 [FLOWABLE_NPE_FIX.md](FLOWABLE_NPE_FIX.md)  
 **快速修复**: 
 ```bash
+# 方案 A: 臨時禁用（最快）
+# 在 application.yml 中設置: enabled: false
+
+# 方案 B: 創建數據庫
 mysql -u root -p < sql/init_flowable_database.sql
 mvn spring-boot:run
 ```
