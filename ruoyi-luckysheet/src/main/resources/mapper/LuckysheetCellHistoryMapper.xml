@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.luckysheet.mapper.LuckysheetCellHistoryMapper">
+    
+    <resultMap type="com.ruoyi.luckysheet.domain.LuckysheetCellHistory" id="HistoryResult">
+        <result property="id"    column="id"    />
+        <result property="workbookId"    column="workbook_id"    />
+        <result property="sheetIndex"    column="sheet_index"    />
+        <result property="rowIndex"    column="row_index"    />
+        <result property="colIndex"    column="col_index"    />
+        <result property="operationType"    column="operation_type"    />
+        <result property="oldValue"    column="old_value"    />
+        <result property="newValue"    column="new_value"    />
+        <result property="operatorId"    column="operator_id"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="operationTime"    column="operation_time"    />
+        <result property="clientIp"    column="client_ip"    />
+        <result property="isArchived"    column="is_archived"    />
+        <result property="archiveTime"    column="archive_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHistoryVo">
+        select id, workbook_id, sheet_index, row_index, col_index, operation_type, old_value, new_value,
+               operator_id, operator_name, dept_id, dept_name, operation_time, client_ip, 
+               is_archived, archive_time, remark
+        from luckysheet_cell_history
+    </sql>
+
+    <select id="selectHistoryList" parameterType="com.ruoyi.luckysheet.domain.LuckysheetCellHistory" resultMap="HistoryResult">
+        <include refid="selectHistoryVo"/>
+        <where>  
+            <if test="workbookId != null">
+                AND workbook_id = #{workbookId}
+            </if>
+            <if test="sheetIndex != null and sheetIndex != ''">
+                AND sheet_index = #{sheetIndex}
+            </if>
+            <if test="rowIndex != null">
+                AND row_index = #{rowIndex}
+            </if>
+            <if test="colIndex != null">
+                AND col_index = #{colIndex}
+            </if>
+            <if test="operationType != null and operationType != ''">
+                AND operation_type = #{operationType}
+            </if>
+            <if test="operatorId != null">
+                AND operator_id = #{operatorId}
+            </if>
+            <if test="deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="isArchived != null and isArchived != ''">
+                AND is_archived = #{isArchived}
+            </if>
+        </where>
+        order by operation_time desc
+    </select>
+
+    <select id="selectCellHistory" resultMap="HistoryResult">
+        <include refid="selectHistoryVo"/>
+        where workbook_id = #{workbookId}
+          and sheet_index = #{sheetIndex}
+          and row_index = #{rowIndex}
+          and col_index = #{colIndex}
+        order by operation_time desc
+    </select>
+
+    <insert id="insertHistory" parameterType="com.ruoyi.luckysheet.domain.LuckysheetCellHistory" useGeneratedKeys="true" keyProperty="id">
+        insert into luckysheet_cell_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workbookId != null">workbook_id,</if>
+            <if test="sheetIndex != null and sheetIndex != ''">sheet_index,</if>
+            <if test="rowIndex != null">row_index,</if>
+            <if test="colIndex != null">col_index,</if>
+            <if test="operationType != null">operation_type,</if>
+            <if test="oldValue != null">old_value,</if>
+            <if test="newValue != null">new_value,</if>
+            <if test="operatorId != null">operator_id,</if>
+            <if test="operatorName != null">operator_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="operationTime != null">operation_time,</if>
+            <if test="clientIp != null">client_ip,</if>
+            <if test="isArchived != null">is_archived,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workbookId != null">#{workbookId},</if>
+            <if test="sheetIndex != null and sheetIndex != ''">#{sheetIndex},</if>
+            <if test="rowIndex != null">#{rowIndex},</if>
+            <if test="colIndex != null">#{colIndex},</if>
+            <if test="operationType != null">#{operationType},</if>
+            <if test="oldValue != null">#{oldValue},</if>
+            <if test="newValue != null">#{newValue},</if>
+            <if test="operatorId != null">#{operatorId},</if>
+            <if test="operatorName != null">#{operatorName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="operationTime != null">#{operationTime},</if>
+            <if test="clientIp != null">#{clientIp},</if>
+            <if test="isArchived != null">#{isArchived},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <insert id="batchInsertHistory">
+        insert into luckysheet_cell_history
+        (workbook_id, sheet_index, row_index, col_index, operation_type, old_value, new_value,
+         operator_id, operator_name, dept_id, dept_name, operation_time, client_ip, is_archived)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.workbookId}, #{item.sheetIndex}, #{item.rowIndex}, #{item.colIndex}, #{item.operationType},
+             #{item.oldValue}, #{item.newValue}, #{item.operatorId}, #{item.operatorName},
+             #{item.deptId}, #{item.deptName}, #{item.operationTime}, #{item.clientIp}, #{item.isArchived})
+        </foreach>
+    </insert>
+
+    <update id="archiveHistory">
+        update luckysheet_cell_history
+        set is_archived = '1',
+            archive_time = sysdate()
+        where workbook_id = #{workbookId}
+          and sheet_index = #{sheetIndex}
+          and row_index = #{rowIndex}
+          and col_index = #{colIndex}
+          and is_archived = '0'
+    </update>
+
+    <select id="selectDeptEditStatistics" resultType="map">
+        select dept_id as deptId,
+               dept_name as deptName,
+               COUNT(*) as editCount,
+               MIN(operation_time) as firstEditTime,
+               MAX(operation_time) as lastEditTime
+        from luckysheet_cell_history
+        where workbook_id = #{workbookId}
+          and sheet_index = #{sheetIndex}
+          and row_index = #{rowIndex}
+          and col_index = #{colIndex}
+          and operation_type IN ('INSERT', 'UPDATE')
+        group by dept_id, dept_name
+        order by editCount desc
+    </select>
+
+    <delete id="deleteHistoryById" parameterType="Long">
+        delete from luckysheet_cell_history where id = #{id}
+    </delete>
+
+    <delete id="deleteHistoryByIds" parameterType="Long">
+        delete from luckysheet_cell_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

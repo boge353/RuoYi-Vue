@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.luckysheet.mapper.LuckysheetCellPermissionMapper">
+    
+    <resultMap type="com.ruoyi.luckysheet.domain.LuckysheetCellPermission" id="PermissionResult">
+        <result property="id"    column="id"    />
+        <result property="workbookId"    column="workbook_id"    />
+        <result property="sheetIndex"    column="sheet_index"    />
+        <result property="rowIndex"    column="row_index"    />
+        <result property="colIndex"    column="col_index"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="permissionType"    column="permission_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPermissionVo">
+        select id, workbook_id, sheet_index, row_index, col_index, dept_id, user_id, 
+               permission_type, create_time, create_by, update_time, update_by, remark
+        from luckysheet_cell_permission
+    </sql>
+
+    <select id="selectPermissionList" parameterType="com.ruoyi.luckysheet.domain.LuckysheetCellPermission" resultMap="PermissionResult">
+        <include refid="selectPermissionVo"/>
+        <where>  
+            <if test="workbookId != null">
+                AND workbook_id = #{workbookId}
+            </if>
+            <if test="sheetIndex != null and sheetIndex != ''">
+                AND sheet_index = #{sheetIndex}
+            </if>
+            <if test="rowIndex != null">
+                AND row_index = #{rowIndex}
+            </if>
+            <if test="colIndex != null">
+                AND col_index = #{colIndex}
+            </if>
+            <if test="deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+        order by workbook_id, sheet_index, row_index, col_index
+    </select>
+
+    <select id="selectCellPermission" resultType="String">
+        select MAX(permission_type) as permission_type
+        from luckysheet_cell_permission
+        where workbook_id = #{workbookId}
+          and sheet_index = #{sheetIndex}
+          and row_index = #{rowIndex}
+          and col_index = #{colIndex}
+          and (
+            (user_id IS NOT NULL AND user_id = #{userId})
+            OR (dept_id IS NOT NULL AND dept_id = #{deptId})
+          )
+    </select>
+
+    <select id="selectSheetPermissions" resultMap="PermissionResult">
+        <include refid="selectPermissionVo"/>
+        where workbook_id = #{workbookId}
+          and sheet_index = #{sheetIndex}
+          and (
+            (user_id IS NOT NULL AND user_id = #{userId})
+            OR (dept_id IS NOT NULL AND dept_id = #{deptId})
+          )
+        order by row_index, col_index
+    </select>
+        
+    <insert id="insertPermission" parameterType="com.ruoyi.luckysheet.domain.LuckysheetCellPermission" useGeneratedKeys="true" keyProperty="id">
+        insert into luckysheet_cell_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workbookId != null">workbook_id,</if>
+            <if test="sheetIndex != null and sheetIndex != ''">sheet_index,</if>
+            <if test="rowIndex != null">row_index,</if>
+            <if test="colIndex != null">col_index,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="permissionType != null">permission_type,</if>
+            <if test="remark != null">remark,</if>
+            create_time,
+            create_by
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workbookId != null">#{workbookId},</if>
+            <if test="sheetIndex != null and sheetIndex != ''">#{sheetIndex},</if>
+            <if test="rowIndex != null">#{rowIndex},</if>
+            <if test="colIndex != null">#{colIndex},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="permissionType != null">#{permissionType},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate(),
+            #{createBy}
+         </trim>
+    </insert>
+
+    <update id="updatePermission" parameterType="com.ruoyi.luckysheet.domain.LuckysheetCellPermission">
+        update luckysheet_cell_permission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="permissionType != null">permission_type = #{permissionType},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate(),
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePermissionById" parameterType="Long">
+        delete from luckysheet_cell_permission where id = #{id}
+    </delete>
+
+    <delete id="deletePermissionByIds" parameterType="Long">
+        delete from luckysheet_cell_permission where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deletePermissionByWorkbookId" parameterType="Long">
+        delete from luckysheet_cell_permission where workbook_id = #{workbookId}
+    </delete>
+</mapper>
