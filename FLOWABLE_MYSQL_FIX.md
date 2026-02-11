@@ -9,6 +9,25 @@ org.flowable.common.engine.api.FlowableException:
 Could not update Flowable database schema: unknown version from database: '8.1.0'
 ```
 
+## 环境要求
+
+本项目已升级到以下版本：
+- **JDK**: 21
+- **Spring Boot**: 2.7.18
+- **Flowable**: 6.8.1
+- **MySQL Connector**: 8.2.0
+
+**重要**: 请确保本地安装了 JDK 21，否则编译会失败。
+
+```bash
+# 检查Java版本
+java -version
+# 应该显示: java version "21.x.x"
+
+# 如果版本不是21，请下载并安装JDK 21:
+# https://adoptium.net/temurin/releases/?version=21
+```
+
 ## 问题原因
 
 1. **数据库版本冲突**: Flowable 6.8.1在检查数据库时，发现已存在的Flowable表中的版本信息与期望的版本不匹配
