@@ -95,7 +95,6 @@ public class FlowableProcessServiceImpl implements IFlowableProcessService
      * 删除流程定义
      * 
      * @param deploymentId 部署ID
-     * @return 结果
      */
     @Override
     public void deleteProcess(String deploymentId)
@@ -108,7 +107,6 @@ public class FlowableProcessServiceImpl implements IFlowableProcessService
      * 
      * @param processId 流程ID
      * @param suspendState 状态
-     * @return 结果
      */
     @Override
     public void updateProcessState(String processId, String suspendState)
