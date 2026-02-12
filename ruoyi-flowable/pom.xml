@@ -17,10 +17,10 @@
 
     <dependencies>
 
-        <!-- Flowable工作流引擎 -->
+        <!-- Flowable流程引擎（仅Process，避免拉起App引擎导致初始化异常） -->
         <dependency>
             <groupId>org.flowable</groupId>
-            <artifactId>flowable-spring-boot-starter</artifactId>
+            <artifactId>flowable-spring-boot-starter-process</artifactId>
         </dependency>
 
         <!-- 通用工具-->
