@@ -151,3 +151,18 @@ flowable:
   database-type: mysql
   # 数据库表前缀
   database-table-prefix: ""
+  # 仅启用Process引擎，避免App引擎在未使用场景下初始化导致启动异常
+  app:
+    enabled: false
+  cmmn:
+    enabled: false
+  dmn:
+    enabled: false
+  form:
+    enabled: false
+  content:
+    enabled: false
+  idm:
+    enabled: false
+  eventregistry:
+    enabled: false
