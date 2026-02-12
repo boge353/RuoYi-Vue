@@ -34,7 +34,9 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
         // 配置数据库类型为MySQL
         engineConfiguration.setDatabaseType("mysql");
 
-        // 注意：不要在代码里强制覆写 databaseSchemaUpdate，避免与配置文件冲突
+        // 当前数据库处于“部分升级”状态，强制关闭自动升级，避免重复DDL导致启动失败
+        engineConfiguration.setDatabaseSchemaUpdate(SpringProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE);
+
         log.info("Flowable工作流引擎配置完成，databaseSchemaUpdate={}", engineConfiguration.getDatabaseSchemaUpdate());
     }
 }
