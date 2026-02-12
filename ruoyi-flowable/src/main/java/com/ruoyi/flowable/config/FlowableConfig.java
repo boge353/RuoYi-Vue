@@ -8,10 +8,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Flowable配置 - 解决MySQL 8.2.0兼容性问题
- * 
+ * Flowable配置
+ *
  * 可以通过设置 flowable.enabled=false 来禁用Flowable功能
- * 
+ * 数据库 schema 更新策略请通过 application.yml 中 flowable.database-schema-update 控制
+ *
  * @author ruoyi
  */
 @Configuration
@@ -19,28 +20,21 @@ import org.springframework.context.annotation.Configuration;
 public class FlowableConfig implements EngineConfigurationConfigurer<SpringProcessEngineConfiguration>
 {
     private static final Logger log = LoggerFactory.getLogger(FlowableConfig.class);
+
     @Override
     public void configure(SpringProcessEngineConfiguration engineConfiguration)
     {
         log.info("正在初始化Flowable工作流引擎...");
-        
+
         // 设置字体，避免中文乱码
         engineConfiguration.setActivityFontName("宋体");
         engineConfiguration.setLabelFontName("宋体");
         engineConfiguration.setAnnotationFontName("宋体");
-        
+
         // 配置数据库类型为MySQL
         engineConfiguration.setDatabaseType("mysql");
-        
-        // 设置数据库schema更新策略为create-drop，这会在每次启动时重新创建表
-        // 如果需要保留数据，改为 "true" 即可
-        // 选项说明:
-        // - "false": 不进行任何检查，假设表已存在
-        // - "true": 自动检查并更新表结构（推荐用于生产环境）
-        // - "create-drop": 启动时创建表，关闭时删除表（仅用于开发测试）
-        // - "drop-create": 先删除后创建（清空所有数据）
-        engineConfiguration.setDatabaseSchemaUpdate(SpringProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
-        
-        log.info("Flowable工作流引擎配置完成");
+
+        // 注意：不要在代码里强制覆写 databaseSchemaUpdate，避免与配置文件冲突
+        log.info("Flowable工作流引擎配置完成，databaseSchemaUpdate={}", engineConfiguration.getDatabaseSchemaUpdate());
     }
 }
